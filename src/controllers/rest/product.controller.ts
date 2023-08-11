@@ -1,37 +1,49 @@
-import {BodyParams, Controller, Inject, PathParams} from "@tsed/common";
-import {Delete, Get,Post,Put,Returns} from "@tsed/schema";
+import { BodyParams, Controller, Inject, PathParams } from "@tsed/common";
+import { Delete, Get, Post, Put, Returns } from "@tsed/schema";
 import { ProductService } from "src/app-services/product.service";
 import { ProductRequest } from "src/dtos/request/product.request";
 import { ProductResponse } from "src/dtos/response/product.response";
+import { QueueService } from "src/services/queue.service";
 
 @Controller("/product")
 export class ProductController {
 
   @Inject(ProductService)
   protected service: ProductService;
-  
+
   @Get("/:productId")
   @Returns(200, Array).Of(ProductResponse)
   public async getProduct(@PathParams('productId') productId: string): Promise<ProductResponse | null> {
     try {
       return await this.service.getById(productId);
-  } catch (err) {
+    } catch (err) {
       throw new Error(err);
+    }
   }
-}
 
   @Delete("/:productId")
-  delete(@PathParams("productId") productId: string): Promise<ProductResponse> {
-    return this.service.delete(productId);
+  delete(@PathParams("productId") productId: string): Boolean {
+    //return this.service.deleteProduct(productId);
+    // Enqueue a job to dlt the product in the "deleteProduct" queue
+    try {
+      QueueService.deleteProduct.add({
+        productid: productId
+
+      })
+      return true;
+    } catch (error) {
+      return false;
+    }
+
   }
 
-/*  @Put("/:productId")
-  update(@PathParams('id') id : string, product: ProductModel) {
-    return this.service.update(id, product);
-  }  
-*/
- @Put("/:productId")
-   public async update(
+  /*  @Put("/:productId")
+    update(@PathParams('id') id : string, product: ProductModel) {
+      return this.service.update(id, product);
+    }  
+  */
+  @Put("/:productId")
+  public async update(
 
     @PathParams("productId") productId: string,
     @BodyParams() newProduct: ProductRequest): Promise<ProductResponse> {
@@ -56,14 +68,20 @@ export class ProductController {
   }
 
   @Post("/")
-   async create(
-    @BodyParams() product : ProductRequest): Promise<ProductResponse> {
-      const createdProduct = await this.service.create(product);
+  create(
+    @BodyParams() product: ProductRequest): Boolean {
 
-      return createdProduct;
+    try {
+
+
+
+      // Enqueue a job to create the product in the "createProduct" queue
+      QueueService.createProduct.add({
+        product: product
+      })
+      return true
+    } catch (error) {
+      return false
     }
-
+  }
 }
-
-
-

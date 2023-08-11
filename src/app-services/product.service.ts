@@ -19,7 +19,7 @@ export class ProductService {
         return await this.repository.findOne({ where: { productId: id } });
     }
 
-    async create(product: ProductRequest): Promise<ProductResponse> {
+    async createProduct(product: ProductRequest): Promise<ProductResponse> {
         return await this.repository.save(product);
     }
 
@@ -27,7 +27,7 @@ export class ProductService {
         return await this.repository.update(id, product);
     }
 
-    async delete(id: string): Promise<any> {
+    async deleteProduct(id: string): Promise<any> {
         return await this.repository.delete(id);
     }
 

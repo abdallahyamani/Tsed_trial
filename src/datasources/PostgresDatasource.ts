@@ -3,16 +3,17 @@ import {DataSource} from "typeorm";
 import {Logger} from "@tsed/logger";
 import { ProductModel } from "src/models/ProductModel";
 import { SupplierModel } from "src/models/SupplierModel";
+import { number } from "@tsed/schema";
 
 export const POSTGRES_DATA_SOURCE = Symbol.for("PostgresDataSource");
 export const PostgresDataSource = new DataSource({
   type: "postgres",
   entities: [ProductModel,SupplierModel],
-  host: "localhost",
-  port: 5432,
-  username: "test",
-  password: "test",
-  database: "prodDB",
+  host: process.env.POSTGRES_HOST,
+  port: Number(process.env.POSTGRES_PORT),
+  username: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DB,
   synchronize: true
 });
 
