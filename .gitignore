@@ -56,5 +56,5 @@ test/**/*.js.map
 .env.local
 .env.development
 
-/pgdata
-/redis-data
+/pgdata/
+/redis-data/
