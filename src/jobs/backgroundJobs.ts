@@ -1,8 +1,6 @@
 import { Inject, Service } from "@tsed/di";
 import { Queue } from "bull";
-import { create } from "domain";
 import { ProductService } from "src/app-services/product.service";
-import { ProductController } from "src/controllers/rest";
 import { QueueService } from "src/services/queue.service";
 
 @Service()
@@ -41,14 +39,13 @@ export class BackgroundJobs {
     // using boot()
     boot() {
         this.createProduct.on('completed', () => {
-            console.log("Product created");
+            console.log("Product is created !");
         })
 
         this.deleteProduct.on('completed', () => {
-            console.log("Product dlted");
+            console.log("Product has been Deleted !");
 
-        })
-        
+        })        
     }
-
+    
 }

@@ -20,13 +20,11 @@ import Bull from "bull";
 @Service()
 export class QueueService {
 
-    //public static queue: Bull.Queue;
     public static createProduct: Bull.Queue;
     public static deleteProduct: Bull.Queue;
 
 
     $onInit() {
-        //QueueService.queue = new Bull("queue", { redis: _connectionOpts })
         QueueService.createProduct = new Bull("createProduct", { redis: _connectionOpts })
         QueueService.deleteProduct = new Bull("deleteProduct", { redis: _connectionOpts })
 

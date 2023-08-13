@@ -23,25 +23,18 @@ export class ProductController {
 
   @Delete("/:productId")
   delete(@PathParams("productId") productId: string): Boolean {
-    //return this.service.deleteProduct(productId);
+
     // Enqueue a job to dlt the product in the "deleteProduct" queue
     try {
       QueueService.deleteProduct.add({
         productid: productId
-
       })
       return true;
     } catch (error) {
       return false;
     }
-
   }
 
-  /*  @Put("/:productId")
-    update(@PathParams('id') id : string, product: ProductModel) {
-      return this.service.update(id, product);
-    }  
-  */
   @Put("/:productId")
   public async update(
 
@@ -72,16 +65,14 @@ export class ProductController {
     @BodyParams() product: ProductRequest): Boolean {
 
     try {
-
-
-
       // Enqueue a job to create the product in the "createProduct" queue
       QueueService.createProduct.add({
         product: product
       })
-      return true
-    } catch (error) {
-      return false
+        return true
+      } catch (error) {
+          return false
+        }
     }
-  }
+
 }
